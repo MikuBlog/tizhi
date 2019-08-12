@@ -304,7 +304,7 @@ export default {
           nextQuestion = document.getElementById('question' + (index+1)),
           ul = this.$refs.ul
         nextQuestion.setAttribute('class','question active')
-        ul.scrollTop = ul.scrollHeight
+        $(ul).animate({scrollTop: ul.scrollHeight}, 500)
       }
 
       // document.querySelector('#grey' + index).style.color = 'grey';

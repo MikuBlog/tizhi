@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Index from '@/views/Index'
 import Home from './views/Home.vue'
 import Result from './views/Result.vue'
 
@@ -10,7 +11,12 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
+      path: "/index",
+      name: "Index",
+      component: Index
+    },
+    {
+      path: '/home',
       name: 'home',
       component: Home
     },
@@ -23,6 +29,10 @@ export default new Router({
       path: '/result',
       name: 'result',
       component: Result
+    },
+    {
+      path: "*",
+      redirect: "/index"
     }
   ]
 })
