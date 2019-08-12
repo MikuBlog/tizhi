@@ -25,8 +25,8 @@
 
          <!-- <el-carousel direction="vertical" :autoplay="false" ref="carousel" height="259px" trigger="click"> -->
           <!-- <el-carousel-item v-for="(item,index) in questions" :key="index"> -->
-        <ul class="question-ul">
-          <li v-for="(item,index) in questions" :key="index"  :class="'question' + (index == 0 ? ' active' : ' disabled')" :id="'question' + index">
+        <ul class="question-ul" ref="ul">
+          <li v-for="(item,index) in questions" :key="index"  :class="['question' + (index == 0 ? ' active' : ' disabled'), 'li-box']" :id="'question' + index">
             <div>
               <h3 :id="'grey' + index">
                 <span class="question-no">
@@ -70,7 +70,6 @@
           <!-- </el-carousel-item> -->
         <!-- </el-carousel> -->
         <!-- </div> -->
-
         <div ref="hidden" id="hidden-div">
           <div class="container option-container">
             <input type="submit" class="hidden-button">
@@ -128,7 +127,14 @@ export default {
     //   this.defaultOffset = document.querySelector('.scroller').clientHeight || this.defaultOffset
     // }
   },
+  mounted() {
+    this.initialStyle()
+  },
   methods: {
+    // 初始化样式
+    initialStyle() {
+
+    },
     touchStart (e) {
       this.startY = e.targetTouches[0].pageY
     },
@@ -294,9 +300,11 @@ export default {
       // 切换下一题
       if(index == this.answers.length && index < this.questions.length) {
         console.log('切换下一题')
-        var nextQuestion = document.getElementById('question' + (index+1))
+        var 
+          nextQuestion = document.getElementById('question' + (index+1)),
+          ul = this.$refs.ul
         nextQuestion.setAttribute('class','question active')
-        nextQuestion.scrollIntoView(true);
+        ul.scrollTop = ul.scrollHeight
       }
 
       // document.querySelector('#grey' + index).style.color = 'grey';
@@ -724,7 +732,6 @@ p b {
 } */
 .question-ul {
   overflow-y: auto;
-  /* margin-top: 300px; */
-  height: 300px;
+  height: 250px;
 }
 </style>
