@@ -1,10 +1,10 @@
 <template>
-  <div class="home">
+  <div class="home" ref="home">
     <!-- <div class="absoulate"> -->
-      <div class="head fixed">
+      <div class="head fixed" ref="height_1">
         <h1>中医9种体质测试</h1>
       </div>
-      <div class="section_header_placeholder">
+      <div class="section_header_placeholder" ref="height_2">
         <div class="section_header" id="header_fixed">
           <h2>根据最近三个月的体验和感觉回答</h2>
         </div>
@@ -65,12 +65,7 @@
               </div>
             </div>
           </li>
-        </ul>
-
-          <!-- </el-carousel-item> -->
-        <!-- </el-carousel> -->
-        <!-- </div> -->
-        <div ref="hidden" id="hidden-div">
+          <div ref="hidden" id="hidden-div">
           <div class="container option-container">
             <input type="submit" class="hidden-button">
             <a class="submit" id="submitButton" ref="submit">
@@ -89,6 +84,11 @@
           <p>超准体质测试，5 分钟从健康看你的性格！</p>
           <p>长按二维码关注后获取解析</p>
         </div>
+        </ul>
+
+          <!-- </el-carousel-item> -->
+        <!-- </el-carousel> -->
+        <!-- </div> -->
       </div>
     </form>
   </div>
@@ -127,14 +127,7 @@ export default {
     //   this.defaultOffset = document.querySelector('.scroller').clientHeight || this.defaultOffset
     // }
   },
-  mounted() {
-    this.initialStyle()
-  },
   methods: {
-    // 初始化样式
-    initialStyle() {
-
-    },
     touchStart (e) {
       this.startY = e.targetTouches[0].pageY
     },
@@ -302,9 +295,10 @@ export default {
         console.log('切换下一题')
         var 
           nextQuestion = document.getElementById('question' + (index+1)),
+          home = this.$refs.home,
           ul = this.$refs.ul
         nextQuestion.setAttribute('class','question active')
-        $(ul).animate({scrollTop: ul.scrollHeight}, 500)
+        nextQuestion.scrollIntoView(true)
       }
 
       // document.querySelector('#grey' + index).style.color = 'grey';
@@ -393,11 +387,11 @@ export default {
 
         success(data) {
 
-            var obj = $.parseJSON(data)
+            // var obj = $.parseJSON(data)
 
-            // _this.questions = obj.resultParm.list
+            // // _this.questions = obj.resultParm.list
 
-            _this.total = obj.resultParm.total
+            // _this.total = obj.resultParm.total
 
             // console.log(_this.questions)
 
@@ -412,10 +406,6 @@ export default {
   },
   beforeMount() {
     this.getAllQuestions()    
-  },
-  mounted() {
-    // window.addEventListener('scroll',this.handleScroll)
-    // window.addEventListener('mousewheel',this.handleScroll,false)
   },
 }
 </script>
@@ -732,6 +722,5 @@ p b {
 } */
 .question-ul {
   overflow-y: auto;
-  height: 250px;
 }
 </style>
