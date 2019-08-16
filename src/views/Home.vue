@@ -40,9 +40,6 @@
 </template>
 <script>
 export default {
-  created() {
-    document.title = `"中医9中体质测试"`
-  },
   methods: {
     navigateTo(path) {
       this.$router.push({ path })

@@ -1344,7 +1344,7 @@ export default new Vuex.Store({
         questionId: "62",
         title: "请选择您的年龄",
         options: [{
-          label: "28以上",
+          label: "28以下",
           value: 1
         }, {
           label: "28~35",

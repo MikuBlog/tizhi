@@ -5,7 +5,6 @@
           <h1>我的体质测试结果</h1>
       </div>
     </header>
-
     <div class="container result-container">
       <!--结果类型-->
       <div class="row typeinfo">
@@ -14,7 +13,7 @@
             <h4>我的体质是</h4>
             <h1>{{name}}</h1>
             <h3>
-              {{inclination}}<br/>
+              {{ inclination }}<br/>
             </h3>
           </div>
           <p class="typeinfo-desc">
@@ -25,7 +24,7 @@
       </div>
       <div class="row desc-list">
         <div class="item active" @click="drop_down(0)" id="item0">
-          <h3><img src="https://img.huofar.com/images/sym-icon.png?type=1" width="20" height="20" style="margin-right: 16px;">{{itemList[0].title}}<em></em></h3>
+          <h3><img src="@/assets/result/logo.png" width="20" height="20" style="margin-right: 16px; position: relative; top: -3px">{{itemList[0].title}}<em style="position:relative; top: -10px;"></em></h3>
           <div class="content">
             <ul>
               <li v-for="item in meaningList"><i class="tab-lsit-conent-title-style"></i>{{item}}</li>
@@ -34,7 +33,7 @@
         </div>
 
         <div class="item" @click="drop_down(1)" id="item1">
-          <h3><img src="https://img.huofar.com/images/sym-icon.png?type=1" width="20" height="20" style="margin-right: 16px;">{{itemList[1].title}}<em></em></h3>
+          <h3><img src="@/assets/result/logo.png" width="20" height="20" style="margin-right: 16px; position: relative; top: -3px">{{itemList[1].title}}<em style="position:relative; top: -10px;"></em></h3>
           <div class="content">
             <ul>
               <li  v-for="item in orginList"><i class="tab-lsit-conent-title-style"></i>{{item}}</li>
@@ -43,7 +42,7 @@
         </div>
 
         <div class="item" @click="drop_down(2)" id="item2">
-          <h3><img src="https://img.huofar.com/images/sym-icon.png?type=1" width="20" height="20" style="margin-right: 16px;">{{itemList[2].title}}<em></em></h3>
+          <h3><img src="@/assets/result/logo.png" width="20" height="20" style="margin-right: 16px; position: relative; top: -3px">{{itemList[2].title}}<em style="position:relative; top: -10px;"></em></h3>
           <div class="content">
             <ul>
               <li v-for="item in probablyList"><i class="tab-lsit-conent-title-style"></i>{{item}}</li>
@@ -52,11 +51,12 @@
         </div>
 
         <div class="item" @click="drop_down(3)" id="item3">
-          <h3><img src="https://img.huofar.com/images/sym-icon.png?type=1" width="20" height="20" style="margin-right: 16px;">{{itemList[3].title}}<em></em></h3>
+          <h3><img src="@/assets/result/logo.png" width="20" height="20" style="margin-right: 16px; position: relative; top: -3px">{{itemList[3].title}}<em style="position:relative; top: -10px;"></em></h3>
             <div class="content newcontent">
               <ul class="tab-list" id="myTab">
                 <li v-for="(item,i) in problemList" :class="'li' + (i == 0 ? ' active':'')" :id="'problem' + i" @click.stop="goto(i)">
-                  <a :value="'#bubble_' + i" data-toggle="tab">{{item.problemName}}</a>
+                  <a :value="'#bubble_' + i" data-toggle="tab">
+                    {{item.problemname}}</a>
                 </li>
               </ul>
 
@@ -64,7 +64,7 @@
                 <div v-for="(item,i) in problemList" :class="'tab-pane fade in tab-list-conent' + (i == 0 ? ' active':'')" :id="'bubble_' + i">
                   <h2 class="tab-list-conent-title">
                     <i class="tab-lsit-conent-title-style"></i>
-                            调理原则：{{item.principle}}                
+                      <span>调理原则：{{item.principle}}</span>               
                   </h2>
                   <p class="tab-list-conent-txt" style="border-bottom:none;">{{item.method}}</p>
                 </div>
@@ -73,7 +73,7 @@
         </div>
               
         <div class="item" @click="drop_down(4)" id="item4">
-          <h3><img src="https://img.huofar.com/images/sym-icon.png?type=1" width="20" height="20" style="margin-right: 16px;">{{itemList[4].title}}<em></em></h3>
+          <h3><img src="@/assets/result/logo.png" width="20" height="20" style="margin-right: 16px; position: relative; top: -3px">{{itemList[4].title}}<em style="position:relative; top: -10px;"></em></h3>
           <div class="content">
             <ul>
               <div v-for="item in improvementList">
@@ -131,19 +131,29 @@ export default {
       meaningList: [],
       orginList: [],
       problem: {
-        'problemName':'',
-        'principle':'',
+        'problemName': '',
+        'principle': '',
         'method': ''
       },
       improvement: {
-        'suggestion':'',
+        'suggestion': '',
         'method': []
       },
       problemList: [],
       improvementList: [],
     }
   },
+  mounted() {
+    this.initialListener()
+    this.getResult()
+  },
   methods: {
+    initialListener() {
+      history.pushState(null, null, document.URL);
+      window.addEventListener('popstate', function () {
+        history.pushState(null, null, document.URL);
+      });
+    },
     drop_down(index) {
       // debugger
       var flag = this.titleItem[index]
@@ -161,22 +171,22 @@ export default {
         if(index == i) {
           var selected = document.getElementById('problem' + i)
           selected.setAttribute('class','li active')
-          var selectedId = $('#problem' + i).find('a').attr('value')
-          $(selectedId).css('display','block')
+          var selectedId = this.$('#problem' + i).find('a').attr('value')
+          this.$(selectedId).css('display','block')
         }else{
           var notSelected = document.getElementById('problem' + i)
           notSelected.setAttribute('class','li')
-          var notSelectedId = $('#problem' + i).find('a').attr('value')
-          $(notSelectedId).css('display','none')
+          var notSelectedId = this.$('#problem' + i).find('a').attr('value')
+          this.$(notSelectedId).css('display','none')
         }
       }
     },
     getResult() {
-        var obj = JSON.parse(window.localStorage.getItem('resultData'))
-        this.name = obj.physiqueName
+        var obj = JSON.parse(window.localStorage.getItem('resultData')).resultParm.physique
+        this.name = obj.physiquename 
         this.nature = obj.nature
         if(obj.inclination != "") {
-          this.inclination = '倾向于' + obj.inclination  + "。"        
+          this.inclination = JSON.parse(obj.inclination).join(",") ? '倾向于' + JSON.parse(obj.inclination).join(",")  + "。"  : ""      
         }
 
         var name = this.name.replace('质','')
@@ -191,33 +201,16 @@ export default {
         }
         this.itemList[3].title = this.name + '常见问题的调理原则'
         this.itemList[4].title = '想改善，这么办！'
-
-        // console.log(obj)
         this.meaningList = obj.meaning.split('\r\n')
         this.orginList = obj.orgin.split('\r\n')
-        console.log(this.orginList)
         this.probablyList = obj.probably.split('\r\n')
-        this.problemList = obj.problemVoList
-        // var problem = new Object();
-        // for(var i = 0;i < obj.problemVoList.length;i++) {
-        //   problem.problemName = obj.problemVoList[i].problemName
-        //   problem.principle = obj.problemVoList[i].principle
-        //   problem.method = obj.problemVoList[i].method
-        //   this.probablyList.push(problem)
-        // }
-        
-        // console.log(this.problemList)
-        // this.improvementList = obj.improvementVoList
-        var improvementList = obj.improvementVoList
+        this.problemList = obj.problemVolist
+        var improvementList = obj.improvementVolist
         for(var i = 0;i < improvementList.length;i++) {
-          improvementList[i].method =  improvementList[i].method.split('\r\n')          
+          improvementList[i].method =  improvementList[i].method.split('\r\n')      
         }
         this.improvementList = improvementList
-        console.log(this.improvementList)
     }
-  },
-  mounted() {
-    this.getResult()
   },
 }
 </script>
@@ -370,6 +363,9 @@ img {
     margin-bottom: 5px;
     font-size: 14px;
     line-height: 150%;
+}
+.liactive {
+  background: #299939;
 }
 .tab-lsit-conent-title-style {
     display: inline-block;

@@ -88,23 +88,37 @@ import { Loading } from 'element-ui';
 export default {
   data() {
     return {
-      // 问题列表
-      questionList: this.$store.state.questions,
+      // 问题列表(深拷贝)
+      questionList: JSON.parse(JSON.stringify(this.$store.state.questions)),
       // 已回答列表
       answerList: [],
       // 未达题目
-      question: this.$store.state.questions[0],
+      question: {},
       // 当前题目位置
       index: 1,
       // 题目总数
-      total: this.$store.state.questions.length
+      total: 0,
+      // hack button样式
+      buttonLength: 2
     }
   },
   mounted() {
+    this.initialData()
     this.initialStyle()
-    this.initialButtonStyle()
+    this.$nextTick(() => {
+      this.initialButtonStyle()
+      this.buttonLength = 2
+    })
   },
   methods: {
+    // 初始化数据
+    initialData() {
+      this.questions = this.questionList[0]
+      this.total = this.questionList.length
+      for(let key in this.questionList[0]) {
+        this.question[key] = this.questionList[0][key]
+      }
+    },
     initialStyle() {
       const 
         questionBox = this.$refs.questionBox,
@@ -114,14 +128,25 @@ export default {
     },
     initialButtonStyle() {
       const eles = document.querySelectorAll('.el-radio-button__inner')
+      this.buttonLength = eles.length
       eles.forEach(val => {
         val.style.border = "1px solid #22ac38"
+        val.addEventListener('mouseover', () => {
+          val.style.color = "#000"
+        })
       })
+    },
+    initialNewButtonStyle() {
+      const eles = document.querySelectorAll('.el-radio-button__inner')
+      for(let i = this.buttonLength - 1, len = eles.length; i < len; i ++) {
+        eles[i].style.color = "#000"
+      }
     },
     // 切换题目
     nextQuestion() {
       this.question = this.questionList[this.index - 1]
       this.$nextTick(() => {
+        this.initialNewButtonStyle()
         this.initialButtonStyle()
         this.index != 62
         ? this.$refs.answer.scrollTop = this.$refs.answer.scrollHeight
@@ -138,10 +163,22 @@ export default {
     },
     // 提交答案
     submitAnswer() {
-      let loadingInstance1 = Loading.service({ fullscreen: true })
-      loadingInstance1.close()
-      console.log(this.answerList.map(val => val.answer))
-      this.$router.push({ path:"/result" })
+      if(this.answerList.length == 62) {
+        let 
+        loadingInstance1 = Loading.service({ fullscreen: true }),
+        _this = this
+        this.$.ajax({
+          url: `/physique/submitAnswers.action?answerList=${JSON.stringify(this.answerList.map(val => val.answer)).replace(/[\[\]]/g, '')}`,
+          type: "post",
+          success(data) {
+            loadingInstance1.close()
+            localStorage.setItem('resultData', data)
+            _this.$router.push({ path:"/result" })
+          },error() {
+            loadingInstance1.close()
+          }
+        })
+      }
     }
   }
 }
